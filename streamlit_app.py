@@ -19,11 +19,11 @@ with col1:
         button = True
         
     if button == True:
-        st.markdown("<h6 style='margin-left:65%; margin-top:-14%;'>Please, wait...</h6>", unsafe_allow_html=True)
+        st.markdown("<h6 style='margin-left:70%; margin-top:-20%;'>Loading...</h6>", unsafe_allow_html=True)
         
         
 with col2:
-    st.markdown("<h5 style='margin-top:10%; margin-bottom:-12%;'>Your text:</h5>", unsafe_allow_html=True)
+    st.markdown("<h5 style='margin-top:10%; margin-bottom:-12%;'>The result:</h5>", unsafe_allow_html=True)
     st.text_area(
         "",
         value=output,
