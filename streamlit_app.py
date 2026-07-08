@@ -1,29 +1,71 @@
 import streamlit as st
+import os
+import glob
 
 button = False
 output = ""
-
-col1, col2 = st.columns(2)
+FILE_NAME = "uploaded_files"
 
 st.markdown("<h1 style='margin-top:-5%;'>PaperForge</h1>", unsafe_allow_html=True)
-st.markdown("<h5 style='margin-bottom:5%; margin-top:-2%;'>Your AI study buddy — because deadlines don’t negotiate</h5>", unsafe_allow_html=True)
+st.markdown(
+    "<h5 style='margin-bottom:5%; margin-top:-2%;'>Your AI study buddy — because deadlines don’t negotiate</h5>",
+    unsafe_allow_html=True
+)
 
-col1, spacer, col2 = st.columns([4, 1, 6])
+
+col1, spacer1, col2, spacer2, col3 = st.columns([3, 0.3, 2.5, 0.3, 4])
+
+
+# ---  clarify the content --- #
 with col1:
-    st.markdown("<h5 style='margin-top:15%; margin-bottom:5%;'>Please, enter the info about the format of your assignment</h5>", unsafe_allow_html=True)
-    description = st.text_input("Title and brief description:")
-    no_words = st.text_input("Number of words:")
-    ref_style = st.text_input("Referencing style:")
-    
+    st.markdown(
+        "<h5 style='margin-top:15%; margin-bottom:5%;'>Assignment settings</h5>",
+        unsafe_allow_html=True
+    )
+
+    description = st.text_input("Title and brief description")
+    no_words = st.text_input("Number of words")
+    ref_style = st.text_input("Referencing style")
+
     if st.button("Run the process"):
         button = True
-        
-    if button == True:
-        st.markdown("<h6 style='margin-left:70%; margin-top:-20%;'>Loading...</h6>", unsafe_allow_html=True)
-        
-        
+
+
+# --- upload files --- #
 with col2:
-    st.markdown("<h5 style='margin-top:10%; margin-bottom:-12%;'>The result:</h5>", unsafe_allow_html=True)
+    st.markdown(
+        "<h5 style='margin-top:15%; margin-bottom:5%;'>Reference documents</h5>",
+        unsafe_allow_html=True
+    )
+
+    uploaded_files = st.file_uploader(
+        "Upload PDF files",
+        type=["pdf"],
+        accept_multiple_files=True
+    )
+    
+    
+    # upload files into "uploaded_files" folder
+    if uploaded_files:
+        for file in uploaded_files:
+            save_path = os.path.join(FILE_NAME, file.name)
+            
+            with open(save_path, "wb") as f:
+                f.write(file.getbuffer())
+                
+    # clean "uploaded_files" folder if user wish so
+    if not uploaded_files:
+        for file in glob.glob("uploaded_files/*pdf"):
+            os.remove(file)
+
+
+# --- display results --- #
+with col3:
+    st.markdown(
+        "<h5 style='margin-top:10%; margin-bottom:2%;'>Generated assignment</h5>",
+        unsafe_allow_html=True
+    )
+
     st.text_area(
         "",
         value=output,
