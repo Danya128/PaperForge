@@ -1,3 +1,5 @@
+from app import process_documents
+
 import streamlit as st
 import os
 import glob
@@ -28,6 +30,7 @@ with col1:
     ref_style = st.text_input("Referencing style")
 
     if st.button("Run the process"):
+        vectorstore = process_documents()
         button = True
 
 

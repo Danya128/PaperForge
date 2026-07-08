@@ -1,29 +1,28 @@
 import os
 import glob
 from pathlib import Path
+from dotenv import load_dotenv
+
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
-from dotenv import load_dotenv
+
 
 
 load_dotenv(override=True)
 MODEL = "gpt-4.1-nano"
+DB_NAME = "vector_db"
 
 
 # Fetch all PDF docs from folder and return them as LangChain Document Object
 def fetch_documents(knowledge_base):
-    folders = glob.glob(str(Path(knowledge_base) / "*"))
-    document = []
-    for folder in folders:
-        loader = DirectoryLoader(
-            folder, glob="**/*.pdf", loader_cls=PyPDFLoader, loader_kwargs={"encoding": "utf-8"}
-        )
-        folder_docs = loader.load()
-        for doc in folder_docs:
-            document.append(doc)
-    return document
+    pdf_files = glob.glob(str(Path(knowledge_base) / "*.pdf"))
+    documents = []
+    for pdf_file in pdf_files:
+        loader = PyPDFLoader(pdf_file)
+        documents.extend(loader.load())
+    return documents
 
 
 
