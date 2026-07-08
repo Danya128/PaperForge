@@ -4,9 +4,18 @@ import streamlit as st
 import os
 import glob
 
-button = False
 output = ""
-FILE_NAME = "uploaded_files"
+
+KNOWLEDGE_BASE = "uploaded_files"
+RULES_STYLE_BASE = "writing_rules"
+DB_NAME = "vector_db"
+DB_RULES = "rules_db"
+
+
+# Create the writing rules data base
+# Using if because st reruns the script on every iteration
+if not os.path.exists("rules_db"):
+    process_documents(RULES_STYLE_BASE, DB_RULES)
 
 st.markdown("<h1 style='margin-top:-5%;'>PaperForge</h1>", unsafe_allow_html=True)
 st.markdown(
@@ -30,8 +39,12 @@ with col1:
     ref_style = st.text_input("Referencing style")
 
     if st.button("Run the process"):
-        vectorstore = process_documents()
-        button = True
+        settings = {
+            "description": description,
+            "no_words": no_words,
+            "ref_style": ref_style
+        }
+        vectorstore = process_documents(KNOWLEDGE_BASE, DB_NAME)
 
 
 # --- upload files --- #
@@ -51,7 +64,7 @@ with col2:
     # upload files into "uploaded_files" folder
     if uploaded_files:
         for file in uploaded_files:
-            save_path = os.path.join(FILE_NAME, file.name)
+            save_path = os.path.join(KNOWLEDGE_BASE, file.name)
             
             with open(save_path, "wb") as f:
                 f.write(file.getbuffer())

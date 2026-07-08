@@ -12,7 +12,7 @@ from langchain_openai import OpenAIEmbeddings
 
 load_dotenv(override=True)
 MODEL = "gpt-4.1-nano"
-DB_NAME = "vector_db"
+
 
 
 # Fetch all PDF docs from folder and return them as LangChain Document Object
