@@ -1,4 +1,4 @@
-from app import process_documents
+from services.utils import process_documents
 
 import streamlit as st
 import os
