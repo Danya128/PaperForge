@@ -1,4 +1,5 @@
 from services.utils import process_documents
+from app import answer_question
 
 import streamlit as st
 import os
@@ -45,6 +46,7 @@ with col1:
             "ref_style": ref_style
         }
         vectorstore = process_documents(KNOWLEDGE_BASE, DB_NAME)
+        output = answer_question(description, no_words, ref_style)
 
 
 # --- upload files --- #
@@ -84,7 +86,7 @@ with col3:
 
     st.text_area(
         "",
-        value=output,
-        height=380,
-        disabled=True
+        value = output,
+        height = 380,
+        disabled = True
     )

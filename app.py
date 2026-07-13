@@ -27,25 +27,23 @@ Requirements:
 4. Follow the writing and referencing style rules
 5. Organize the assignment in paragraphs with logical flow
 6. Write in a formal academic tone
+7. Write all references of in-text citations at the end of the text
+as it is asked in style rules
 """
-
 
 load_dotenv(override = True)
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-
-
-vectorstore_uploads = Chroma(persist_directory = DB_NAME, embedding_function = embeddings)
-vectorstore_rules = Chroma(persist_directory = DB_RULES, embedding_function = embeddings)
-
-
-retriever_uploads = vectorstore_uploads.as_retriever()
-retriever_rules = vectorstore_rules.as_retriever()
-
 llm = ChatOpenAI(temperature = 0, model_name = MODEL)
 
 
 def answer_question(description, no_words, ref_style):
+    vectorstore_uploads = Chroma(persist_directory = DB_NAME, embedding_function = embeddings)
+    vectorstore_rules = Chroma(persist_directory = DB_RULES, embedding_function = embeddings)
+
+    retriever_uploads = vectorstore_uploads.as_retriever()
+    retriever_rules = vectorstore_rules.as_retriever()
+
     doc_rules = retriever_rules.invoke(f"Tell me about {ref_style} referencing style")
     doc_uploads = retriever_uploads.invoke(f"Give me all relevant information about {description}")
     rules_context = "\n\n".join(doc.page_content for doc in doc_rules)
