@@ -29,6 +29,7 @@ Requirements:
 6. Write in a formal academic tone
 7. Write all references of in-text citations at the end of the text
 as it is asked in style rules
+8. If there are no details of the publication, say so in the brackets
 """
 
 load_dotenv(override = True)

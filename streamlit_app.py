@@ -28,26 +28,6 @@ st.markdown(
 col1, spacer1, col2, spacer2, col3 = st.columns([3, 0.3, 2.5, 0.3, 4])
 
 
-# ---  clarify the content --- #
-with col1:
-    st.markdown(
-        "<h5 style='margin-top:15%; margin-bottom:5%;'>Assignment settings</h5>",
-        unsafe_allow_html=True
-    )
-
-    description = st.text_input("Title and brief description")
-    no_words = st.text_input("Number of words")
-    ref_style = st.text_input("Referencing style")
-
-    if st.button("Run the process"):
-        settings = {
-            "description": description,
-            "no_words": no_words,
-            "ref_style": ref_style
-        }
-        vectorstore = process_documents(KNOWLEDGE_BASE, DB_NAME)
-        output = answer_question(description, no_words, ref_style)
-
 
 # --- upload files --- #
 with col2:
@@ -62,7 +42,6 @@ with col2:
         accept_multiple_files=True
     )
     
-    
     # upload files into "uploaded_files" folder
     if uploaded_files:
         for file in uploaded_files:
@@ -75,6 +54,35 @@ with col2:
     if not uploaded_files:
         for file in glob.glob("uploaded_files/*pdf"):
             os.remove(file)
+
+
+
+# ---  clarify the content --- #
+with col1:
+    st.markdown(
+        "<h5 style='margin-top:15%; margin-bottom:5%;'>Assignment settings</h5>",
+        unsafe_allow_html=True
+    )
+
+    description = st.text_input("Title and brief description")
+    no_words = st.text_input("Number of words")
+    ref_style = st.text_input("Referencing style")
+
+    if st.button("Run the process"):
+        if not description.strip():
+            st.error("Please enter an assignment description")
+        elif not no_words.isdigit():
+            st.error("Number of words must be a number")
+        elif int(no_words) <= 0:
+            st.error("Number of words must be greater than 0")
+        elif not ref_style.strip():
+            st.error("Please enter a referencing style")
+        elif not uploaded_files:
+            st.error("Please upload at least one PDF document")
+        else:
+            vectorstore = process_documents(KNOWLEDGE_BASE, DB_NAME)
+            output = answer_question(description, no_words, ref_style)
+
 
 
 # --- display results --- #
